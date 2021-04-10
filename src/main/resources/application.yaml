@@ -1,1 +1,12 @@
+spring:
+  main:
+    banner-mode: off
+    web-application-type: none
 
+logging:
+  level:
+    root: WARN
+    cz.masci: DEBUG
+  pattern:
+    console: "%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
+#    file: "${LOG_LEVEL_PATTERN:%5p} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
