@@ -3,10 +3,10 @@ package cz.masci.flightevents;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 class FlightEventsAppApplicationTests {
 
-	@Test
+//	@Test
 	void contextLoads() {
 	}
 
