@@ -30,19 +30,25 @@ import lombok.ToString;
 @Data
 @ToString
 @XmlAccessorType(XmlAccessType.FIELD)
-public class VoiceMessageEvent {
+public class MotionEvent {
     @XmlAttribute(name = "selfID")
     private String selfId;
-    
+
     @XmlAttribute(name = "startTime")
     private Double startTime;
-    
-    @XmlAttribute(name = "messageFilename")
-    private String messageFilename;
-    
+
+    @XmlAttribute(name = "commandType")
+    private String commandType;
+
+    @XmlAttribute(name = "axis")
+    private String axis;
+
+    @XmlAttribute(name = "velocity")
+    private Double velocity;
+
+    @XmlAttribute(name = "acceleration")
+    private Double acceleration;
+
     @XmlAttribute(name = "duration")
     private Double duration;
-    
-    @XmlAttribute(name = "volume")
-    private Integer volume;
 }

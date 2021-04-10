@@ -16,7 +16,6 @@
  */
 package cz.masci.flightevents.model;
 
-import java.math.BigDecimal;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -30,19 +29,19 @@ import lombok.ToString;
 @Data
 @ToString
 @XmlAccessorType(XmlAccessType.FIELD)
-public class VoiceMessageEvent {
+public class ConditionEvent {
     @XmlAttribute(name = "selfID")
     private String selfId;
     
     @XmlAttribute(name = "startTime")
     private Double startTime;
     
-    @XmlAttribute(name = "messageFilename")
-    private String messageFilename;
+    @XmlAttribute(name = "conditionValue")
+    private Integer conditionValue;
     
-    @XmlAttribute(name = "duration")
-    private Double duration;
+    @XmlAttribute(name = "conditionID")
+    private Integer conditionId;
     
-    @XmlAttribute(name = "volume")
-    private Integer volume;
+    @XmlAttribute(name = "comparator")
+    private Integer comparator;
 }

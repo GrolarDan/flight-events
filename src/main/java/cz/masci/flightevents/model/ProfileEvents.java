@@ -31,4 +31,8 @@ import lombok.Data;
 public class ProfileEvents {
     @XmlElement(name = "VoiceMessageEvent")
     private List<VoiceMessageEvent> voiceMessageEvents;
+    @XmlElement(name = "ConditionEvent")
+    private List<ConditionEvent> conditionEvents;
+    @XmlElement(name = "MotionEvent")
+    private List<MotionEvent> motionEvents;
 }

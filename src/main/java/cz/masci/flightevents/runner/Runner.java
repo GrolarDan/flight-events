@@ -17,11 +17,18 @@
 package cz.masci.flightevents.runner;
 
 import cz.masci.flightevents.model.FakeRoot;
+import cz.masci.flightevents.model.ProfileEvents;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Optional;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.stream.StreamSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -44,7 +51,13 @@ public class Runner implements ApplicationRunner {
         log.info("Parsing file: {}", inputFileName);
         
         var root = unmarshall(inputFileName);
-        root.getProfileEvents().getVoiceMessageEvents().forEach(voiceMessage -> log.debug(voiceMessage.toString()));
+        ProfileEvents profileEvents = root.getProfileEvents();
+        
+        profileEvents.getVoiceMessageEvents().forEach(voiceMessage -> log.debug(voiceMessage.toString()));
+        profileEvents.getConditionEvents().forEach(condition -> log.debug(condition.toString()));
+        profileEvents.getMotionEvents().forEach(motion -> log.debug(motion.toString()));
+//        var profileEvents = unmarshall(inputFileName);
+//        profileEvents.getVoiceMessageEvents().forEach(voiceMessage -> log.debug(voiceMessage.toString()));
     }
 
     public FakeRoot unmarshall(String filename) throws JAXBException, IOException {
@@ -52,4 +65,21 @@ public class Runner implements ApplicationRunner {
         return (FakeRoot) context.createUnmarshaller()
                 .unmarshal(new FileReader(filename));
     }
+    
+//    public ProfileEvents unmarshall(String fileName) throws XMLStreamException, JAXBException {
+//        XMLInputFactory xif = XMLInputFactory.newFactory();
+//        StreamSource xml = new StreamSource(fileName);
+//        XMLStreamReader xsr = xif.createXMLStreamReader(xml);
+//        xsr.nextTag();
+//        while(!xsr.getLocalName().equals("ProfileEvents")) {
+//            xsr.nextTag();
+//        }
+//
+//        JAXBContext jc = JAXBContext.newInstance(ProfileEvents.class);
+//        Unmarshaller unmarshaller = jc.createUnmarshaller();
+//        JAXBElement<ProfileEvents> jb = unmarshaller.unmarshal(xsr, ProfileEvents.class);
+//        xsr.close();
+//
+//        return jb.getValue();
+//    }
 }
