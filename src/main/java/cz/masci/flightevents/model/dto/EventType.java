@@ -14,31 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.masci.flightevents.model.events;
+package cz.masci.flightevents.model.dto;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
- * @author Daniel Masek
+ * @author Daniel
  */
-@Data
-@ToString(callSuper = true)
-@XmlAccessorType(XmlAccessType.FIELD)
-public class VoiceMessageEvent extends AbstractEvent {
-
-    @XmlAttribute(name = "messageFilename")
-    private String messageFilename;
-
-    @XmlAttribute(name = "duration")
-    private Double duration;
-
-    @XmlAttribute(name = "volume")
-    private Integer volume;
-
-
+@RequiredArgsConstructor
+@Getter
+public enum EventType {
+    CONDITION("Condition"), MOTION("Motion"), VOICE_MESSAGE("Message");
+    
+    private final String text;
 }

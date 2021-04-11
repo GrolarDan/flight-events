@@ -14,37 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.masci.flightevents.model.events;
+package cz.masci.flightevents.model.dto;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import lombok.Data;
 import lombok.ToString;
 
 /**
  *
- * @author Daniel Masek
+ * @author Daniel
  */
 @Data
-@ToString(callSuper = true)
-@XmlAccessorType(XmlAccessType.FIELD)
-public class MotionEvent extends AbstractEvent {
-
-    @XmlAttribute(name = "commandType")
-    private String commandType;
-
-    @XmlAttribute(name = "axis")
-    private String axis;
-
-    @XmlAttribute(name = "velocity")
-    private Double velocity;
-
-    @XmlAttribute(name = "acceleration")
-    private Double acceleration;
-
-    @XmlAttribute(name = "duration")
+@ToString
+public class EventDTO {
+    private Double startTime;
     private Double duration;
-
-
+    private EventType type;
+    private String message;
 }

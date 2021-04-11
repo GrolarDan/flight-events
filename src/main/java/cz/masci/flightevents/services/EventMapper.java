@@ -14,37 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.masci.flightevents.model.events;
+package cz.masci.flightevents.services;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import lombok.Data;
-import lombok.ToString;
+import cz.masci.flightevents.model.dto.EventDTO;
+import cz.masci.flightevents.model.events.AbstractEvent;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author Daniel Masek
  */
-@Data
-@ToString(callSuper = true)
-@XmlAccessorType(XmlAccessType.FIELD)
-public class MotionEvent extends AbstractEvent {
+@Service
+public interface EventMapper {
 
-    @XmlAttribute(name = "commandType")
-    private String commandType;
-
-    @XmlAttribute(name = "axis")
-    private String axis;
-
-    @XmlAttribute(name = "velocity")
-    private Double velocity;
-
-    @XmlAttribute(name = "acceleration")
-    private Double acceleration;
-
-    @XmlAttribute(name = "duration")
-    private Double duration;
-
-
+    public EventDTO map(AbstractEvent event);
 }
