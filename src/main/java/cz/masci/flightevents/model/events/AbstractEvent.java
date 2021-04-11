@@ -14,17 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.masci.flightevents.model;
+package cz.masci.flightevents.model.events;
 
-import cz.masci.flightevents.model.events.AbstractEvent;
-import cz.masci.flightevents.model.events.ConditionEvent;
-import cz.masci.flightevents.model.events.MotionEvent;
-import cz.masci.flightevents.model.events.VoiceMessageEvent;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlAttribute;
 import lombok.Data;
 
 /**
@@ -33,12 +27,11 @@ import lombok.Data;
  */
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ProfileEvents {
+public abstract class AbstractEvent {
+    @XmlAttribute(name = "selfID")
+    private String selfId;
 
-    @XmlElements({
-        @XmlElement(name = "VoiceMessageEvent", type = VoiceMessageEvent.class),
-        @XmlElement(name = "ConditionEvent", type = ConditionEvent.class),
-        @XmlElement(name = "MotionEvent", type = MotionEvent.class)
-    })
-    private List<AbstractEvent> events;
+    @XmlAttribute(name = "startTime")
+    private Double startTime;
+
 }

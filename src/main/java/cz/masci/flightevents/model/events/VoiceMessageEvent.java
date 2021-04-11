@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.masci.flightevents.model;
+package cz.masci.flightevents.model.events;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -29,19 +29,16 @@ import lombok.ToString;
 @Data
 @ToString
 @XmlAccessorType(XmlAccessType.FIELD)
-public class VoiceMessageEvent {
-    @XmlAttribute(name = "selfID")
-    private String selfId;
-    
-    @XmlAttribute(name = "startTime")
-    private Double startTime;
-    
+public class VoiceMessageEvent extends AbstractEvent {
+
     @XmlAttribute(name = "messageFilename")
     private String messageFilename;
-    
+
     @XmlAttribute(name = "duration")
     private Double duration;
-    
+
     @XmlAttribute(name = "volume")
     private Integer volume;
+
+
 }

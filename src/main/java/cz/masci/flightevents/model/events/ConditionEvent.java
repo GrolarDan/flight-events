@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.masci.flightevents.model;
+package cz.masci.flightevents.model.events;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,21 +27,18 @@ import lombok.ToString;
  * @author Daniel Masek
  */
 @Data
-@ToString
+@ToString(callSuper = true)
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ConditionEvent {
-    @XmlAttribute(name = "selfID")
-    private String selfId;
-    
-    @XmlAttribute(name = "startTime")
-    private Double startTime;
-    
+public class ConditionEvent extends AbstractEvent {
+
     @XmlAttribute(name = "conditionValue")
     private Integer conditionValue;
-    
+
     @XmlAttribute(name = "conditionID")
     private Integer conditionId;
-    
+
     @XmlAttribute(name = "comparator")
     private Integer comparator;
+
+
 }
