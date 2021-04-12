@@ -16,6 +16,16 @@
  */
 package cz.masci.flightevents.runner;
 
+import cz.masci.flightevents.model.FakeRoot;
+import cz.masci.flightevents.model.ProfileEvents;
+import cz.masci.flightevents.model.dto.EventDTO;
+import cz.masci.flightevents.services.EventMapper;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Optional;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -23,16 +33,45 @@ import org.springframework.stereotype.Component;
 
 /**
  * Main application runner.
- * 
+ *
  * @author Daniel Masek
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class Runner implements ApplicationRunner {
 
+    private final EventMapper eventMapper;
+    
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("Running Flight events XML Parser.");
+        String inputFileName = Optional.of(args.getOptionValues("input").get(0)).orElseThrow();
+        
+        log.info("Parsing file: {}", inputFileName);
+        
+        var root = unmarshall(inputFileName);
+        ProfileEvents profileEvents = root.getProfileEvents();
+        
+        profileEvents.getEvents().forEach(event -> log.debug(event.toString()));
+
+        System.out.println("\nstartTime; duration; TYPE; message");
+        
+        profileEvents.getEvents().forEach(event -> printEvent(eventMapper.map(event)));
+    }
+
+    private FakeRoot unmarshall(String filename) throws JAXBException, IOException {
+        JAXBContext context = JAXBContext.newInstance(FakeRoot.class);
+        return (FakeRoot) context.createUnmarshaller()
+                .unmarshal(new FileReader(filename));
+    }
+    
+    private void printEvent(EventDTO event) {
+        System.out.println(
+                String.format("%2.2f; %2.2f; %s; %s", 
+                        event.getStartTime(), event.getDuration(), event.getType().getText(), event.getMessage()
+                )
+        );
     }
     
 }

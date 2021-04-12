@@ -17,7 +17,6 @@
     
     <properties>
         <java.version>16</java.version>
-        <spring-native.version>0.9.1</spring-native.version>
         <!--Overide lombok version because from 1.18.18 we get an error-->
         <lombok.version>1.18.20</lombok.version>
     </properties>
@@ -26,11 +25,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.experimental</groupId>
-            <artifactId>spring-native</artifactId>
-            <version>${spring-native.version}</version>
         </dependency>
 
         <dependency>
@@ -45,6 +39,20 @@
             <scope>compile</scope>
         </dependency>
         
+        <!--JAXB dependencies-->
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>javax.activation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+        </dependency>
+
         <!--Logging--> 
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -69,41 +77,37 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                    <image>
-                        <builder>paketobuildpacks/builder:tiny</builder>
-                        <env>
-                            <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
-                        </env>
-                    </image>
+                    <finalName>${project.parent.artifactId}-${project.artifactId}</finalName>
+                    <mainClass>cz.masci.flightevents.FlightEventsApplication</mainClass>
+                    <executable>true</executable>
+                    <skip>false</skip>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.experimental</groupId>
-                <artifactId>spring-aot-maven-plugin</artifactId>
-                <version>${spring-native.version}</version>
                 <executions>
                     <execution>
-                        <id>test-generate</id>
                         <goals>
-                            <goal>test-generate</goal>
+                            <goal>build-info</goal>
+                            <goal>repackage</goal>
                         </goals>
-                    </execution>
-                    <execution>
-                        <id>generate</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
+                        <configuration>
+                            <classifier>exec</classifier>
+                            <outputDirectory>${project.build.directory}/dist</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <compilerArgs>
+                        <arg>--enable-preview</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+    
     <repositories>
         <repository>
             <id>spring-releases</id>
@@ -111,12 +115,5 @@
             <url>https://repo.spring.io/release</url>
         </repository>
     </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-releases</id>
-            <name>Spring Releases</name>
-            <url>https://repo.spring.io/release</url>
-        </pluginRepository>
-    </pluginRepositories>
-
+    
 </project>
