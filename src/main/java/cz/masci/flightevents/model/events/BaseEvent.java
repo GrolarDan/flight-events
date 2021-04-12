@@ -16,6 +16,7 @@
  */
 package cz.masci.flightevents.model.events;
 
+import cz.masci.flightevents.model.dto.EventType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -27,11 +28,16 @@ import lombok.Data;
  */
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-public abstract class AbstractEvent {
+public abstract class BaseEvent {
+
     @XmlAttribute(name = "selfID")
     private String selfId;
 
     @XmlAttribute(name = "startTime")
     private Double startTime;
 
+    @XmlAttribute(name = "duration")
+    private Double duration;
+
+    public abstract EventType getEventType();
 }

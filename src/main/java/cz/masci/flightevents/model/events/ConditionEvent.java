@@ -16,10 +16,12 @@
  */
 package cz.masci.flightevents.model.events;
 
+import cz.masci.flightevents.model.dto.EventType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -28,8 +30,9 @@ import lombok.ToString;
  */
 @Data
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ConditionEvent extends AbstractEvent {
+public class ConditionEvent extends BaseEvent {
 
     @XmlAttribute(name = "conditionValue")
     private Integer conditionValue;
@@ -40,5 +43,9 @@ public class ConditionEvent extends AbstractEvent {
     @XmlAttribute(name = "comparator")
     private Integer comparator;
 
-
+    @Override
+    public EventType getEventType() {
+        return EventType.CONDITION;
+    }
+    
 }

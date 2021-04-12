@@ -16,7 +16,7 @@
  */
 package cz.masci.flightevents.model;
 
-import cz.masci.flightevents.model.events.AbstractEvent;
+import cz.masci.flightevents.model.events.BaseEvent;
 import cz.masci.flightevents.model.events.ConditionEvent;
 import cz.masci.flightevents.model.events.MotionEvent;
 import cz.masci.flightevents.model.events.VoiceMessageEvent;
@@ -40,5 +40,5 @@ public class ProfileEvents {
         @XmlElement(name = "ConditionEvent", type = ConditionEvent.class),
         @XmlElement(name = "MotionEvent", type = MotionEvent.class)
     })
-    private List<AbstractEvent> events;
+    private List<BaseEvent> events;
 }

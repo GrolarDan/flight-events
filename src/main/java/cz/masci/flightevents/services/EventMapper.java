@@ -17,7 +17,7 @@
 package cz.masci.flightevents.services;
 
 import cz.masci.flightevents.model.dto.EventDTO;
-import cz.masci.flightevents.model.events.AbstractEvent;
+import cz.masci.flightevents.model.events.BaseEvent;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,5 +27,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface EventMapper {
 
-    public EventDTO map(AbstractEvent event);
+    public <T extends BaseEvent> EventDTO map(T event);
 }
