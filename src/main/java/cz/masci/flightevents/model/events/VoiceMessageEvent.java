@@ -16,10 +16,12 @@
  */
 package cz.masci.flightevents.model.events;
 
+import cz.masci.flightevents.model.dto.EventType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -28,17 +30,19 @@ import lombok.ToString;
  */
 @Data
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @XmlAccessorType(XmlAccessType.FIELD)
-public class VoiceMessageEvent extends AbstractEvent {
+public class VoiceMessageEvent extends BaseEvent {
 
     @XmlAttribute(name = "messageFilename")
     private String messageFilename;
 
-    @XmlAttribute(name = "duration")
-    private Double duration;
-
     @XmlAttribute(name = "volume")
     private Integer volume;
 
+    @Override
+    public EventType getEventType() {
+        return EventType.VOICE_MESSAGE;
+    }
 
 }

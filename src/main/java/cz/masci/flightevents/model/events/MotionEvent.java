@@ -16,10 +16,12 @@
  */
 package cz.masci.flightevents.model.events;
 
+import cz.masci.flightevents.model.dto.EventType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -28,8 +30,9 @@ import lombok.ToString;
  */
 @Data
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @XmlAccessorType(XmlAccessType.FIELD)
-public class MotionEvent extends AbstractEvent {
+public class MotionEvent extends BaseEvent {
 
     @XmlAttribute(name = "commandType")
     private String commandType;
@@ -43,8 +46,9 @@ public class MotionEvent extends AbstractEvent {
     @XmlAttribute(name = "acceleration")
     private Double acceleration;
 
-    @XmlAttribute(name = "duration")
-    private Double duration;
-
+    @Override
+    public EventType getEventType() {
+        return EventType.MOTION;
+    }
 
 }

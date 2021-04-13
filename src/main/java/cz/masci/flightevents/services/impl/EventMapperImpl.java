@@ -17,64 +17,138 @@
 package cz.masci.flightevents.services.impl;
 
 import cz.masci.flightevents.model.dto.EventDTO;
-import cz.masci.flightevents.model.dto.EventType;
-import cz.masci.flightevents.model.events.AbstractEvent;
+import cz.masci.flightevents.model.events.BaseEvent;
 import cz.masci.flightevents.model.events.ConditionEvent;
 import cz.masci.flightevents.model.events.MotionEvent;
-import cz.masci.flightevents.model.events.VoiceMessageEvent;
 import cz.masci.flightevents.services.EventMapper;
+import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
  *
  * @author Daniel Masek
  */
+@Slf4j
 @Service
 public class EventMapperImpl implements EventMapper {
 
     @Override
-    public EventDTO map(AbstractEvent event) {
+    public <T extends BaseEvent> EventDTO map(T event) {
+        var result = new EventDTO();
+        result.setType(event.getEventType());
+        result.setStartTime(event.getStartTime());
+        result.setDuration(Optional.ofNullable(event.getDuration()).orElse(0.0));
+        result.setMessage(getMessage(event));
+
+        return result;
+    }
+
+    private <T extends BaseEvent> String getMessage(T event) {
         if (event instanceof MotionEvent motionEvent) {
-            return map(motionEvent);
+            return getMessage(motionEvent);
         }
-        
-        if (event instanceof VoiceMessageEvent voiceMessageEvent) {
-            return map(voiceMessageEvent);
-        }
-        
+
+//        if (event instanceof VoiceMessageEvent voiceMessageEvent) {
+//            return getMessage(voiceMessageEvent);
+//        }
+//
         if (event instanceof ConditionEvent conditionEvent) {
-            return map(conditionEvent);
+            return getMessage(conditionEvent);
+        }
+
+        return "NOT IMPLEMENTED";
+    }
+
+    private String getMessage(MotionEvent event) {
+        var result = new StringBuilder();
+        result.append(event.getAxis()).append(" ");
+        result.append(formatDouble(event.getVelocity(), 2)).append(" ");
+        result.append(formatDouble(event.getAcceleration(), 2));
+        
+        return result.toString();
+    }
+
+//    private String getMessage(VoiceMessageEvent event) {
+//        return "NOT IMPLEMENTED";
+//    }
+//
+    private String getMessage(ConditionEvent event) {
+        var result = new StringBuilder();
+        result.append(mapCondition(event.getConditionId())).append(" ");
+        result.append(mapComparator(event.getComparator())).append(" ");
+        result.append(formatDouble(event.getConditionValue(), 2));
+        
+        if (event.getConditionId().equals(13)) {
+            result.append(" from ").append(mapPosition(event.getConditionValue2(), event.getConditionValue3()));
         }
         
-        throw new UnsupportedOperationException("Unsupported event type");
+        if (event.getComparator().equals(3) || event.getComparator().equals(4)) {
+            result.append(" ").append(formatDouble(event.getConditionValue2(), 2));
+        }
+        
+        return result.toString();
     }
 
-    private EventDTO map(MotionEvent event) {
-        var result = new EventDTO();
-        result.setType(EventType.MOTION);
-        result.setStartTime(event.getStartTime());
-        result.setDuration(event.getDuration());
-        result.setMessage(String.format("'%s %2.2f: %2.2f'", event.getAxis(), event.getVelocity(), event.getAcceleration()));
-
-        return result;
+    private String mapCondition(Integer conditionId) {
+        log.trace("Mapping condition: {}", conditionId);
+        return switch (conditionId) {
+            case 0 ->
+                "Altitude";
+            case 2 ->
+                "Airspeed";
+            case 3 ->
+                "Heading";
+            case 4 ->
+                "Pitch";
+            case 5 ->
+                "Roll";
+            case 11 ->
+                "Longitude";
+            case 13 ->
+                "Distance";
+            default ->
+                "NOT DEFINED";
+        };
     }
 
-    private EventDTO map(VoiceMessageEvent event) {
-        var result = new EventDTO();
-        result.setType(EventType.VOICE_MESSAGE);
-        result.setStartTime(event.getStartTime());
-        result.setDuration(event.getDuration());
-
-        return result;
+    private String mapComparator(Integer comparator) {
+        log.trace("Mapping comparator: {}", comparator);
+        return switch (comparator) {
+            case 0 ->
+                "<";
+            case 1 ->
+                "NOT DEFINED";
+            case 2 ->
+                ">";
+            case 3 ->
+                "<>";
+            case 4 ->
+                "><";
+            default ->
+                "NOT DEFINED";
+        };
     }
 
-    private EventDTO map(ConditionEvent event) {
-        var result = new EventDTO();
-        result.setType(EventType.CONDITION);
-        result.setStartTime(event.getStartTime());
-        result.setDuration(1.0);
+    private String mapPosition(Double value1, Double value2) {
+        double epsilon = 0.001d;
 
-        return result;
+        log.trace("Mapping position: {}:{}", value1, value2);
+        
+        if ((Math.abs(value1 - 21.30830833) < epsilon)
+                && (Math.abs(value2 + 157.93) < epsilon)) {
+            return "VOR";
+        }
+
+        if ((Math.abs(value1 - 21.32473333) < epsilon)
+                && (Math.abs(value2 + 158.049) < epsilon)) {
+            return "NDB";
+        }
+        
+        return "NOT DEFINED POSITION";
     }
-
+    
+    private String formatDouble(Double value, int precision) {
+        return String.format("%." + precision + "f", value);
+    }
 }
