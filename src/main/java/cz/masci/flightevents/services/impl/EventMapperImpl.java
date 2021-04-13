@@ -20,6 +20,7 @@ import cz.masci.flightevents.model.dto.EventDTO;
 import cz.masci.flightevents.model.events.BaseEvent;
 import cz.masci.flightevents.model.events.ConditionEvent;
 import cz.masci.flightevents.model.events.MotionEvent;
+import cz.masci.flightevents.model.events.VoiceMessageEvent;
 import cz.masci.flightevents.services.EventMapper;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ public class EventMapperImpl implements EventMapper {
         var result = new EventDTO();
         result.setType(event.getEventType());
         result.setStartTime(event.getStartTime());
-        result.setDuration(Optional.ofNullable(event.getDuration()).orElse(0.0));
+        result.setDuration(Optional.ofNullable(event.getDuration()).orElse(1.0));
         result.setMessage(getMessage(event));
 
         return result;
@@ -46,21 +47,21 @@ public class EventMapperImpl implements EventMapper {
 
     private <T extends BaseEvent> String getMessage(T event) {
         if (event instanceof MotionEvent motionEvent) {
-            return getMessage(motionEvent);
+            return getMotionMessage(motionEvent);
         }
 
-//        if (event instanceof VoiceMessageEvent voiceMessageEvent) {
-//            return getMessage(voiceMessageEvent);
-//        }
-//
+        if (event instanceof VoiceMessageEvent voiceMessageEvent) {
+            return getVoiceMessage(voiceMessageEvent);
+        }
+
         if (event instanceof ConditionEvent conditionEvent) {
-            return getMessage(conditionEvent);
+            return getConditionMessage(conditionEvent);
         }
 
         return "NOT IMPLEMENTED";
     }
 
-    private String getMessage(MotionEvent event) {
+    private String getMotionMessage(MotionEvent event) {
         var result = new StringBuilder();
         result.append(event.getAxis()).append(" ");
         result.append(formatDouble(event.getVelocity(), 2)).append(" ");
@@ -69,11 +70,14 @@ public class EventMapperImpl implements EventMapper {
         return result.toString();
     }
 
-//    private String getMessage(VoiceMessageEvent event) {
-//        return "NOT IMPLEMENTED";
-//    }
-//
-    private String getMessage(ConditionEvent event) {
+    private String getVoiceMessage(VoiceMessageEvent event) {
+        var result = new StringBuilder();
+        result.append(event.getMessageFilename());
+        
+        return result.toString();
+    }
+
+    private String getConditionMessage(ConditionEvent event) {
         var result = new StringBuilder();
         result.append(mapCondition(event.getConditionId())).append(" ");
         result.append(mapComparator(event.getComparator())).append(" ");
