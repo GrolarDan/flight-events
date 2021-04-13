@@ -35,7 +35,13 @@ import lombok.ToString;
 public class ConditionEvent extends BaseEvent {
 
     @XmlAttribute(name = "conditionValue")
-    private Integer conditionValue;
+    private Double conditionValue;
+
+    @XmlAttribute(name = "conditionValue2")
+    private Double conditionValue2;
+
+    @XmlAttribute(name = "conditionValue3")
+    private Double conditionValue3;
 
     @XmlAttribute(name = "conditionID")
     private Integer conditionId;
