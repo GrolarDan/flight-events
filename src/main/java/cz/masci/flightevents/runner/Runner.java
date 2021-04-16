@@ -19,9 +19,11 @@ package cz.masci.flightevents.runner;
 import cz.masci.flightevents.model.FakeRoot;
 import cz.masci.flightevents.model.ProfileEvents;
 import cz.masci.flightevents.model.dto.EventDTO;
+import cz.masci.flightevents.model.events.BaseEvent;
 import cz.masci.flightevents.services.EventMapper;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -55,9 +57,9 @@ public class Runner implements ApplicationRunner {
         
         profileEvents.getEvents().forEach(event -> log.debug(event.toString()));
 
-        System.out.println("\nstartTime; duration; TYPE; message");
+        List<EventDTO> events = mapEvents(profileEvents.getEvents());
         
-        profileEvents.getEvents().forEach(event -> printEvent(eventMapper.map(event)));
+        printEvents(events);
     }
 
     private FakeRoot unmarshall(String filename) throws JAXBException, IOException {
@@ -72,6 +74,18 @@ public class Runner implements ApplicationRunner {
                         event.getStartTime(), event.getDuration(), event.getType().getText(), event.getMessage()
                 )
         );
+    }
+    
+    private void printEvents(List<EventDTO> events) {
+        System.out.println("\nstartTime; duration; TYPE; message");
+
+        events.stream()
+                .sorted((o1, o2) -> o1.getStartTime().compareTo(o2.getStartTime()))
+                .forEach(this::printEvent);
+    }
+    
+    private List<EventDTO> mapEvents(List<BaseEvent> events) {
+        return events.stream().map(eventMapper::map).toList();
     }
     
 }
