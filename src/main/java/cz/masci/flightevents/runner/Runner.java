@@ -44,21 +44,21 @@ import org.springframework.stereotype.Component;
 public class Runner implements ApplicationRunner {
 
     private final EventMapper eventMapper;
-    
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("Running Flight events XML Parser.");
         String inputFileName = Optional.of(args.getOptionValues("input").get(0)).orElseThrow();
-        
+
         log.info("Parsing file: {}", inputFileName);
-        
+
         var root = unmarshall(inputFileName);
         ProfileEvents profileEvents = root.getProfileEvents();
-        
+
         profileEvents.getEvents().forEach(event -> log.debug(event.toString()));
 
         List<EventDTO> events = mapEvents(profileEvents.getEvents());
-        
+
         printEvents(events);
     }
 
@@ -67,25 +67,26 @@ public class Runner implements ApplicationRunner {
         return (FakeRoot) context.createUnmarshaller()
                 .unmarshal(new FileReader(filename));
     }
-    
+
+    private List<EventDTO> mapEvents(List<BaseEvent> events) {
+        return events.stream()
+                .map(eventMapper::map)
+                .sorted((o1, o2) -> o1.getStartTime().compareTo(o2.getStartTime()))
+                .toList();
+    }
+
+    private void printEvents(List<EventDTO> events) {
+        System.out.println("\nstartTime; duration; TYPE; message");
+
+        events.stream().forEach(this::printEvent);
+    }
+
     private void printEvent(EventDTO event) {
         System.out.println(
-                String.format("%2.2f; %2.2f; %s; %s", 
+                String.format("%2.2f; %2.2f; %s; %s",
                         event.getStartTime(), event.getDuration(), event.getType().getText(), event.getMessage()
                 )
         );
     }
-    
-    private void printEvents(List<EventDTO> events) {
-        System.out.println("\nstartTime; duration; TYPE; message");
 
-        events.stream()
-                .sorted((o1, o2) -> o1.getStartTime().compareTo(o2.getStartTime()))
-                .forEach(this::printEvent);
-    }
-    
-    private List<EventDTO> mapEvents(List<BaseEvent> events) {
-        return events.stream().map(eventMapper::map).toList();
-    }
-    
 }
