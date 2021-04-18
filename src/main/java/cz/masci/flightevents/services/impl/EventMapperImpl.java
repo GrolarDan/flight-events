@@ -64,6 +64,9 @@ public class EventMapperImpl implements EventMapper {
     private String getMotionMessage(MotionEvent event) {
         var result = new StringBuilder();
         result.append(event.getAxis()).append(" ");
+        if (event.getPosition() != null) {
+            result.append(event.getPosition()).append(" ");
+        }
         result.append(formatDouble(event.getVelocity(), 2)).append(" ");
         result.append(formatDouble(event.getAcceleration(), 2));
         

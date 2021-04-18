@@ -40,6 +40,9 @@ public class MotionEvent extends BaseEvent {
     @XmlAttribute(name = "axis")
     private String axis;
 
+    @XmlAttribute(name = "position")
+    private Integer position;
+    
     @XmlAttribute(name = "velocity")
     private Double velocity;
 
