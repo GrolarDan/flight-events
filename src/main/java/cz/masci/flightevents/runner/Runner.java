@@ -19,10 +19,12 @@ package cz.masci.flightevents.runner;
 import cz.masci.flightevents.model.FakeRoot;
 import cz.masci.flightevents.model.ProfileEvents;
 import cz.masci.flightevents.model.dto.EventDTO;
-import cz.masci.flightevents.model.events.BaseEvent;
 import cz.masci.flightevents.services.EventMapper;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
 import javax.xml.bind.JAXBContext;
@@ -48,44 +50,55 @@ public class Runner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("Running Flight events XML Parser.");
-        String inputFileName = Optional.of(args.getOptionValues("input").get(0)).orElseThrow();
+        String inputFileName = Optional.ofNullable(args.getOptionValues("input")).orElseThrow().get(0);
+        String outputFileName = Optional.ofNullable(args.getOptionValues("output")).orElse(List.of("output.csv")).get(0);
 
         log.info("Parsing file: {}", inputFileName);
 
-        var root = unmarshall(inputFileName);
+        List<EventDTO> events = getEvents(inputFileName);
+
+        printEventsToConsole(events);
+        printEventsToCsv(events, outputFileName);
+    }
+
+    private List<EventDTO> getEvents(String fileName) throws JAXBException, IOException {
+        var root = unmarshall(fileName);
         ProfileEvents profileEvents = root.getProfileEvents();
 
-        profileEvents.getEvents().forEach(event -> log.debug(event.toString()));
-
-        List<EventDTO> events = mapEvents(profileEvents.getEvents());
-
-        printEvents(events);
-    }
-
-    private FakeRoot unmarshall(String filename) throws JAXBException, IOException {
-        JAXBContext context = JAXBContext.newInstance(FakeRoot.class);
-        return (FakeRoot) context.createUnmarshaller()
-                .unmarshal(new FileReader(filename));
-    }
-
-    private List<EventDTO> mapEvents(List<BaseEvent> events) {
-        return events.stream()
+        return profileEvents.getEvents().stream()
+                .peek(event -> log.debug(event.toString()))
                 .map(eventMapper::map)
                 .sorted((o1, o2) -> o1.getStartTime().compareTo(o2.getStartTime()))
                 .toList();
     }
 
-    private void printEvents(List<EventDTO> events) {
-        System.out.println("\nstartTime; duration; TYPE; message");
-
-        events.stream().forEach(this::printEvent);
+    private FakeRoot unmarshall(String fileName) throws JAXBException, IOException {
+        JAXBContext context = JAXBContext.newInstance(FakeRoot.class);
+        return (FakeRoot) context.createUnmarshaller()
+                .unmarshal(new FileReader(fileName));
     }
 
-    private void printEvent(EventDTO event) {
-        System.out.println(
-                String.format("%2.2f; %2.2f; %s; %s",
-                        event.getStartTime(), event.getDuration(), event.getType().getText(), event.getMessage()
-                )
+    private void printEventsToConsole(List<EventDTO> events) {
+        System.out.println("\nstartTime; duration; TYPE; message");
+
+        events.stream().forEach(event -> System.out.println(mapEventToString(event)));
+    }
+
+    private void printEventsToCsv(List<EventDTO> events, String fileName) throws IOException {
+        log.info("Exporting to file {}", fileName);
+        
+        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(fileName)))) {
+            out.println("startTime; duration; TYPE; message;");
+            
+            events.stream().forEach(event -> out.println(mapEventToString(event)));
+            
+            out.flush();
+        }
+    }
+    
+    private String mapEventToString(EventDTO event) {
+        return String.format("%2.2f; %2.2f; %s; %s;",
+                event.getStartTime(), event.getDuration(), event.getType().getText(), event.getMessage()
         );
     }
 
