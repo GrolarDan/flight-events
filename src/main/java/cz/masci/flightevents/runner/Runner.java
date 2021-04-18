@@ -19,9 +19,11 @@ package cz.masci.flightevents.runner;
 import cz.masci.flightevents.model.FakeRoot;
 import cz.masci.flightevents.model.ProfileEvents;
 import cz.masci.flightevents.model.dto.EventDTO;
+import cz.masci.flightevents.model.events.BaseEvent;
 import cz.masci.flightevents.services.EventMapper;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -42,22 +44,22 @@ import org.springframework.stereotype.Component;
 public class Runner implements ApplicationRunner {
 
     private final EventMapper eventMapper;
-    
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("Running Flight events XML Parser.");
         String inputFileName = Optional.of(args.getOptionValues("input").get(0)).orElseThrow();
-        
+
         log.info("Parsing file: {}", inputFileName);
-        
+
         var root = unmarshall(inputFileName);
         ProfileEvents profileEvents = root.getProfileEvents();
-        
+
         profileEvents.getEvents().forEach(event -> log.debug(event.toString()));
 
-        System.out.println("\nstartTime; duration; TYPE; message");
-        
-        profileEvents.getEvents().forEach(event -> printEvent(eventMapper.map(event)));
+        List<EventDTO> events = mapEvents(profileEvents.getEvents());
+
+        printEvents(events);
     }
 
     private FakeRoot unmarshall(String filename) throws JAXBException, IOException {
@@ -65,13 +67,26 @@ public class Runner implements ApplicationRunner {
         return (FakeRoot) context.createUnmarshaller()
                 .unmarshal(new FileReader(filename));
     }
-    
+
+    private List<EventDTO> mapEvents(List<BaseEvent> events) {
+        return events.stream()
+                .map(eventMapper::map)
+                .sorted((o1, o2) -> o1.getStartTime().compareTo(o2.getStartTime()))
+                .toList();
+    }
+
+    private void printEvents(List<EventDTO> events) {
+        System.out.println("\nstartTime; duration; TYPE; message");
+
+        events.stream().forEach(this::printEvent);
+    }
+
     private void printEvent(EventDTO event) {
         System.out.println(
-                String.format("%2.2f; %2.2f; %s; %s", 
+                String.format("%2.2f; %2.2f; %s; %s",
                         event.getStartTime(), event.getDuration(), event.getType().getText(), event.getMessage()
                 )
         );
     }
-    
+
 }
