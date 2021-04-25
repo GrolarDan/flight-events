@@ -16,6 +16,7 @@
  */
 package cz.masci.flightevents.services.impl;
 
+import cz.masci.flightevents.mapper.MappingProperties;
 import cz.masci.flightevents.model.dto.EventDTO;
 import cz.masci.flightevents.model.events.BaseEvent;
 import cz.masci.flightevents.model.events.ConditionEvent;
@@ -23,6 +24,7 @@ import cz.masci.flightevents.model.events.MotionEvent;
 import cz.masci.flightevents.model.events.VoiceMessageEvent;
 import cz.masci.flightevents.services.EventMapper;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +34,11 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class EventMapperImpl implements EventMapper {
 
+    private final MappingProperties mappingProperties;
+    
     @Override
     public <T extends BaseEvent> EventDTO map(T event) {
         var result = new EventDTO();
@@ -121,20 +126,8 @@ public class EventMapperImpl implements EventMapper {
 
     private String mapComparator(Integer comparator) {
         log.trace("Mapping comparator: {}", comparator);
-        return switch (comparator) {
-            case 0 ->
-                "<";
-            case 1 ->
-                "NOT DEFINED";
-            case 2 ->
-                ">";
-            case 3 ->
-                "<>";
-            case 4 ->
-                "><";
-            default ->
-                "NOT DEFINED";
-        };
+        return Optional.ofNullable(mappingProperties.getComparator().get(comparator))
+                .orElse("NOT DEFINED");
     }
 
     private String mapPosition(Double value1, Double value2) {

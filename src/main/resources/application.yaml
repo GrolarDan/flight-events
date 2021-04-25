@@ -10,3 +10,10 @@ logging:
   pattern:
     console: "%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
 #    file: "${LOG_LEVEL_PATTERN:%5p} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
+
+mapping:
+  comparator:
+    0: "<"
+    2: ">"
+    3: "<>"
+    4: "><"
