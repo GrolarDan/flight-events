@@ -13,7 +13,13 @@ logging:
 
 mapping:
   comparator:
-    0: "<"
-    2: ">"
-    3: "<>"
-    4: "><"
+    0: 
+      sign: "<"
+    2: 
+      sign: ">"
+    3: 
+      sign: "<>"
+      bipolar: true
+    4:
+      sign: "><"
+      bipolar: true
