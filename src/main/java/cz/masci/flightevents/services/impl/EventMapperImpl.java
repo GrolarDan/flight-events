@@ -18,6 +18,7 @@ package cz.masci.flightevents.services.impl;
 
 import cz.masci.flightevents.mapper.MappingProperties;
 import cz.masci.flightevents.model.dto.ComparatorDTO;
+import cz.masci.flightevents.model.dto.ConditionDTO;
 import cz.masci.flightevents.model.dto.EventDTO;
 import cz.masci.flightevents.model.events.BaseEvent;
 import cz.masci.flightevents.model.events.ConditionEvent;
@@ -88,13 +89,14 @@ public class EventMapperImpl implements EventMapper {
 
     private String getConditionMessage(ConditionEvent event) {
         var comparator = mapComparator(event.getComparator());
+        var condition = mapCondition(event.getConditionId());
 
         var result = new StringBuilder();
-        result.append(mapCondition(event.getConditionId())).append(" ");
+        result.append(condition.getName()).append(" ");
         result.append(comparator.getSign()).append(" ");
         result.append(formatDouble(event.getConditionValue(), 2));
         
-        if (event.getConditionId().equals(13)) {
+        if (condition.isPosition()) {
             result.append(" from ").append(mapPosition(event.getConditionValue2(), event.getConditionValue3()));
         }
         
@@ -105,26 +107,10 @@ public class EventMapperImpl implements EventMapper {
         return result.toString();
     }
 
-    private String mapCondition(Integer conditionId) {
+    private ConditionDTO mapCondition(Integer conditionId) {
         log.trace("Mapping condition: {}", conditionId);
-        return switch (conditionId) {
-            case 0 ->
-                "Altitude";
-            case 2 ->
-                "Airspeed";
-            case 3 ->
-                "Heading";
-            case 4 ->
-                "Pitch";
-            case 5 ->
-                "Roll";
-            case 11 ->
-                "Longitude";
-            case 13 ->
-                "Distance";
-            default ->
-                "NOT DEFINED";
-        };
+        return Optional.ofNullable(mappingProperties.getCondition().get(conditionId))
+                .orElseGet(ConditionDTO.getNotDefined());
     }
 
     private ComparatorDTO mapComparator(Integer comparator) {

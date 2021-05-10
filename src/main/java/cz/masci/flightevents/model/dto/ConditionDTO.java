@@ -14,26 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.masci.flightevents.mapper;
+package cz.masci.flightevents.model.dto;
 
-import cz.masci.flightevents.model.dto.ComparatorDTO;
-import cz.masci.flightevents.model.dto.ConditionDTO;
-import java.util.HashMap;
-import java.util.Map;
-import lombok.Getter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import java.util.function.Supplier;
+import lombok.Data;
 
 /**
  *
  * @author Daniel
  */
-@ConfigurationProperties(prefix = "mapping")
-@Configuration
-@Getter
-public class MappingProperties {
-    /** Comparator mapper */
-    private final Map<Integer, ComparatorDTO> comparator = new HashMap<>();
-    /** Condition mapper */
-    private final Map<Integer, ConditionDTO> condition = new HashMap<>();
+@Data
+public class ConditionDTO {
+
+    private String name;
+    private boolean position;
+    
+    public static Supplier<ConditionDTO> getNotDefined() {
+        var condition = new ConditionDTO();
+        condition.setName("NOT DEFINED");
+        return () -> condition;
+    }
 }
