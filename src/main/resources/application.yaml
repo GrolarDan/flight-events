@@ -23,3 +23,19 @@ mapping:
     4:
       sign: "><"
       bipolar: true
+  condition:
+    0:
+      name: "Altitude"
+    2:
+      name: "Airspeed"
+    3:
+      name: "Heading"
+    4:
+      name: "Pitch"
+    5:
+      name: "Roll"
+    11:
+      name: "Longitude"
+    13:
+      name: "Distance"
+      position: true
