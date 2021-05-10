@@ -16,24 +16,21 @@
  */
 package cz.masci.flightevents.runner;
 
+import cz.masci.flightevents.mapper.MappingProperties;
 import cz.masci.flightevents.model.FakeRoot;
 import cz.masci.flightevents.model.ProfileEvents;
 import cz.masci.flightevents.model.dto.EventDTO;
 import cz.masci.flightevents.services.EventMapper;
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.io.SequenceInputStream;
-import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

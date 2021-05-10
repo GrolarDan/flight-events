@@ -16,6 +16,8 @@
  */
 package cz.masci.flightevents.services.impl;
 
+import cz.masci.flightevents.mapper.MappingProperties;
+import cz.masci.flightevents.model.dto.ComparatorDTO;
 import cz.masci.flightevents.model.dto.EventDTO;
 import cz.masci.flightevents.model.events.BaseEvent;
 import cz.masci.flightevents.model.events.ConditionEvent;
@@ -23,6 +25,7 @@ import cz.masci.flightevents.model.events.MotionEvent;
 import cz.masci.flightevents.model.events.VoiceMessageEvent;
 import cz.masci.flightevents.services.EventMapper;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +35,11 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class EventMapperImpl implements EventMapper {
 
+    private final MappingProperties mappingProperties;
+    
     @Override
     public <T extends BaseEvent> EventDTO map(T event) {
         var result = new EventDTO();
@@ -81,16 +87,18 @@ public class EventMapperImpl implements EventMapper {
     }
 
     private String getConditionMessage(ConditionEvent event) {
+        var comparator = mapComparator(event.getComparator());
+
         var result = new StringBuilder();
         result.append(mapCondition(event.getConditionId())).append(" ");
-        result.append(mapComparator(event.getComparator())).append(" ");
+        result.append(comparator.getSign()).append(" ");
         result.append(formatDouble(event.getConditionValue(), 2));
         
         if (event.getConditionId().equals(13)) {
             result.append(" from ").append(mapPosition(event.getConditionValue2(), event.getConditionValue3()));
         }
         
-        if (event.getComparator().equals(3) || event.getComparator().equals(4)) {
+        if (comparator.isBipolar()) {
             result.append(" ").append(formatDouble(event.getConditionValue2(), 2));
         }
         
@@ -119,22 +127,10 @@ public class EventMapperImpl implements EventMapper {
         };
     }
 
-    private String mapComparator(Integer comparator) {
+    private ComparatorDTO mapComparator(Integer comparator) {
         log.trace("Mapping comparator: {}", comparator);
-        return switch (comparator) {
-            case 0 ->
-                "<";
-            case 1 ->
-                "NOT DEFINED";
-            case 2 ->
-                ">";
-            case 3 ->
-                "<>";
-            case 4 ->
-                "><";
-            default ->
-                "NOT DEFINED";
-        };
+        return Optional.ofNullable(mappingProperties.getComparator().get(comparator))
+                .orElseGet(ComparatorDTO.getNotDefined());
     }
 
     private String mapPosition(Double value1, Double value2) {
