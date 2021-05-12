@@ -20,6 +20,7 @@ import cz.masci.flightevents.mapper.MappingProperties;
 import cz.masci.flightevents.model.dto.ComparatorDTO;
 import cz.masci.flightevents.model.dto.ConditionDTO;
 import cz.masci.flightevents.model.dto.EventDTO;
+import cz.masci.flightevents.model.dto.PositionDTO;
 import cz.masci.flightevents.model.events.BaseEvent;
 import cz.masci.flightevents.model.events.ConditionEvent;
 import cz.masci.flightevents.model.events.MotionEvent;
@@ -97,7 +98,8 @@ public class EventMapperImpl implements EventMapper {
         result.append(formatDouble(event.getConditionValue(), 2));
         
         if (condition.isPosition()) {
-            result.append(" from ").append(mapPosition(event.getConditionValue2(), event.getConditionValue3()));
+            var position = mapPosition(event.getConditionValue2(), event.getConditionValue3());
+            result.append(" from ").append(position.getName());
         }
         
         if (comparator.isBipolar()) {
@@ -119,22 +121,18 @@ public class EventMapperImpl implements EventMapper {
                 .orElseGet(ComparatorDTO.getNotDefined());
     }
 
-    private String mapPosition(Double value1, Double value2) {
-        double epsilon = 0.001d;
+    private PositionDTO mapPosition(double value1, double value2) {
+        log.trace("Mapping position: {} : {}", value1, value2);
 
-        log.trace("Mapping position: {}:{}", value1, value2);
-        
-        if ((Math.abs(value1 - 21.30830833) < epsilon)
-                && (Math.abs(value2 + 157.93) < epsilon)) {
-            return "VOR";
-        }
-
-        if ((Math.abs(value1 - 21.32473333) < epsilon)
-                && (Math.abs(value2 + 158.049) < epsilon)) {
-            return "NDB";
+        for (PositionDTO position : mappingProperties.getPosition()) {
+            if ((Math.abs(value1 - position.getValue1()) < position.getEpsilon())
+                    && (Math.abs(value2 - position.getValue2()) < position.getEpsilon())) {
+                return position;
+            }
+            
         }
         
-        return "NOT DEFINED POSITION";
+        return PositionDTO.getNotDefined();
     }
     
     private String formatDouble(Double value, int precision) {

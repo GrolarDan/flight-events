@@ -18,7 +18,10 @@ package cz.masci.flightevents.mapper;
 
 import cz.masci.flightevents.model.dto.ComparatorDTO;
 import cz.masci.flightevents.model.dto.ConditionDTO;
+import cz.masci.flightevents.model.dto.PositionDTO;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -36,4 +39,6 @@ public class MappingProperties {
     private final Map<Integer, ComparatorDTO> comparator = new HashMap<>();
     /** Condition mapper */
     private final Map<Integer, ConditionDTO> condition = new HashMap<>();
+    /** Position mapper */
+    private final List<PositionDTO> position = new ArrayList<>();
 }
