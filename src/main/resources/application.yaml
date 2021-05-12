@@ -39,3 +39,14 @@ mapping:
     13:
       name: "Distance"
       position: true
+  position:
+    - 
+      name: VOR
+      value1: 21.30830833
+      value2: -157.93
+      epsilon: 0.001
+    -
+      name: NDB
+      value1: 21.32473333
+      value2: -158.049
+      epsilon: 0.001
