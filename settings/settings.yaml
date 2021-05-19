@@ -1,0 +1,43 @@
+logging:
+  level:
+    cz.masci: INFO
+
+mapping:
+  comparator:
+    0: 
+      sign: "<"
+    2: 
+      sign: ">"
+    3: 
+      sign: "<>"
+      bipolar: true
+    4:
+      sign: "><"
+      bipolar: true
+  condition:
+    0:
+      name: "Altitude"
+    2:
+      name: "Airspeed"
+    3:
+      name: "Heading"
+    4:
+      name: "Pitch"
+    5:
+      name: "Roll"
+    11:
+      name: "Longitude"
+    13:
+      name: "Distance"
+      position: true
+  position:
+    - 
+      name: VOR
+      value1: 21.30830833
+      value2: -157.93
+      epsilon: 0.001
+    -
+      name: NDB
+      value1: 21.32473333
+      value2: -158.049
+      epsilon: 0.001
