@@ -16,7 +16,6 @@
  */
 package cz.masci.flightevents.runner;
 
-import cz.masci.flightevents.mapper.MappingProperties;
 import cz.masci.flightevents.model.FakeRoot;
 import cz.masci.flightevents.model.ProfileEvents;
 import cz.masci.flightevents.model.dto.EventDTO;
