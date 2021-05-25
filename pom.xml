@@ -137,34 +137,12 @@
                     <argLine>--enable-preview</argLine>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.panteleyev</groupId>
-                <artifactId>jpackage-maven-plugin</artifactId>
-                <version>1.5.1</version>
-                
-                <configuration>
-                    <name>flight-events</name>
-                    <input>${project.build.directory}/dist</input>
-                    <destination>${project.build.directory}/install</destination>
-                    <winConsole>true</winConsole>
-                    <addModules>java.base,java.datatransfer,java.logging,java.xml,java.management,java.naming,java.desktop,java.instrument,jdk.unsupported</addModules>
-                    <mainJar>${project.parent.artifactId}-${project.artifactId}-exec.jar</mainJar>
-                    <temp>${project.build.directory}/temp-package</temp>
-                    <javaOptions>
-                        <option>--enable-preview</option>
-                        <option>-Dspring.config.import=file:./app/settings.yaml</option>
-                    </javaOptions>
-                    <winDirChooser>true</winDirChooser>
-                    <appVersion>0.0.2</appVersion>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
     
     <profiles>
         <profile>
             <id>release</id>
-            
             <build>
                 <plugins>
                     <plugin>
@@ -175,11 +153,36 @@
                                 <configuration>
                                     <releaseVersion>${release.version}</releaseVersion>
                                     <developmentVersion>${development.version}</developmentVersion>
+                                    <dryRun>true</dryRun>
                                 </configuration>
                                 <goals>
                                     <goal>prepare</goal>
                                 </goals>
                                 <phase>install</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.panteleyev</groupId>
+                        <artifactId>jpackage-maven-plugin</artifactId>
+                        <version>1.5.1</version>
+                        <executions>
+                            <execution>
+                                <configuration>
+                                    <name>flight-events</name>
+                                    <input>${project.build.directory}/dist</input>
+                                    <destination>${project.build.directory}/install</destination>
+                                    <winConsole>true</winConsole>
+                                    <addModules>java.base,java.datatransfer,java.logging,java.xml,java.management,java.naming,java.desktop,java.instrument,jdk.unsupported</addModules>
+                                    <mainJar>${project.parent.artifactId}-${project.artifactId}-exec.jar</mainJar>
+                                    <temp>${project.build.directory}/temp-package</temp>
+                                    <javaOptions>
+                                        <option>--enable-preview</option>
+                                        <option>-Dspring.config.import=file:./app/settings.yaml</option>
+                                    </javaOptions>
+                                    <winDirChooser>true</winDirChooser>
+                                    <appVersion>${release.version}</appVersion>
+                                </configuration>                                
                             </execution>
                         </executions>
                     </plugin>
