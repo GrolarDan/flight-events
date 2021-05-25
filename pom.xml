@@ -153,7 +153,6 @@
                                 <configuration>
                                     <releaseVersion>${release.version}</releaseVersion>
                                     <developmentVersion>${development.version}</developmentVersion>
-                                    <dryRun>true</dryRun>
                                 </configuration>
                                 <goals>
                                     <goal>prepare</goal>
@@ -182,7 +181,11 @@
                                     </javaOptions>
                                     <winDirChooser>true</winDirChooser>
                                     <appVersion>${release.version}</appVersion>
-                                </configuration>                                
+                                </configuration>
+                                <goals>
+                                    <goal>jpackage</goal>
+                                </goals>
+                                <phase>install</phase>
                             </execution>
                         </executions>
                     </plugin>

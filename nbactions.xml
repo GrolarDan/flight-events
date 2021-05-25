@@ -56,6 +56,17 @@
                 <skipTests>true</skipTests>
             </properties>
         </action>
+        <action>
+            <actionName>CUSTOM-Release Version</actionName>
+            <displayName>Release Version</displayName>
+            <goals>
+                <goal>-B</goal>
+                <goal>install</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>release</activatedProfile>
+            </activatedProfiles>
+        </action>
         
         
     </actions>
