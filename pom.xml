@@ -10,7 +10,7 @@
     
     <groupId>cz.masci.flight</groupId>
     <artifactId>flight-events</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
     <name>Flight Events App</name>    
     <description>Flight Events XML Parser Application</description>
     
@@ -19,8 +19,8 @@
         <!--Overide lombok version because from 1.18.18 we get an error-->
         <lombok.version>1.18.20</lombok.version>
         
-        <release.version>0.0.2</release.version>
-        <development.version>0.0.3</development.version>
+        <release.version>0.0.4</release.version>
+        <development.version>0.0.5</development.version>
     </properties>
     
     <dependencies>
@@ -150,12 +150,23 @@
                         <artifactId>maven-release-plugin</artifactId>
                         <executions>
                             <execution>
+                                <id>prepare</id>
                                 <configuration>
                                     <releaseVersion>${release.version}</releaseVersion>
                                     <developmentVersion>${development.version}</developmentVersion>
                                 </configuration>
                                 <goals>
                                     <goal>prepare</goal>
+                                </goals>
+                                <phase>install</phase>
+                            </execution>
+                            <execution>
+                                <id>perform</id>
+                                <configuration>
+                                    <releaseVersion>${release.version}</releaseVersion>
+                                    <developmentVersion>${development.version}</developmentVersion>
+                                </configuration>
+                                <goals>
                                     <goal>perform</goal>
                                 </goals>
                                 <phase>install</phase>
@@ -185,22 +196,6 @@
                                 </configuration>
                                 <goals>
                                     <goal>jpackage</goal>
-                                </goals>
-                                <phase>install</phase>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-release-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <configuration>
-                                    <releaseVersion>${release.version}</releaseVersion>
-                                    <developmentVersion>${development.version}</developmentVersion>
-                                </configuration>
-                                <goals>
-                                    <goal>perform</goal>
                                 </goals>
                                 <phase>install</phase>
                             </execution>
