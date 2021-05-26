@@ -153,6 +153,7 @@
                                 <configuration>
                                     <releaseVersion>${release.version}</releaseVersion>
                                     <developmentVersion>${development.version}</developmentVersion>
+                                    <dryRun>true</dryRun>
                                 </configuration>
                                 <goals>
                                     <goal>prepare</goal>
