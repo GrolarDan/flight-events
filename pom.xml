@@ -19,8 +19,8 @@
         <!--Overide lombok version because from 1.18.18 we get an error-->
         <lombok.version>1.18.20</lombok.version>
         
-        <release.version>0.0.7</release.version>
-        <development.version>0.0.8</development.version>
+        <release.version>0.0.8</release.version>
+        <development.version>0.0.9</development.version>
     </properties>
     
     <dependencies>
@@ -151,10 +151,10 @@
                         <executions>
                             <execution>
                                 <id>prepare</id>
-                                <configuration>
+<!--                                <configuration>
                                     <releaseVersion>${release.version}</releaseVersion>
                                     <developmentVersion>${development.version}</developmentVersion>
-                                </configuration>
+                                </configuration>-->
                                 <goals>
                                     <goal>prepare</goal>
                                 </goals>
@@ -167,9 +167,9 @@
                                     <developmentVersion>${development.version}</developmentVersion>
                                 </configuration>
                                 <goals>
-                                    <goal>perform</goal>
+                                    <goal>clean</goal>
                                 </goals>
-                                <phase>deploy</phase>
+                                <phase>install</phase>
                             </execution>
                         </executions>
                     </plugin>
@@ -192,7 +192,7 @@
                                         <option>-Dspring.config.import=file:./app/settings.yaml</option>
                                     </javaOptions>
                                     <winDirChooser>true</winDirChooser>
-                                    <appVersion>${release.version}</appVersion>
+                                    <appVersion>${project.version}</appVersion>
                                 </configuration>
                                 <goals>
                                     <goal>jpackage</goal>
@@ -219,12 +219,4 @@
         <tag>HEAD</tag>
     </scm>
     
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub</name>
-            <url>https://maven.pkg.github.com/GrolarDan/flight-events</url>  
-        </repository>
-    </distributionManagement>
-
 </project>
