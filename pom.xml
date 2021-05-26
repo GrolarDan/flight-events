@@ -10,7 +10,7 @@
     
     <groupId>cz.masci.flight</groupId>
     <artifactId>flight-events</artifactId>
-    <version>0.0.6</version>
+    <version>0.0.7-SNAPSHOT</version>
     <name>Flight Events App</name>    
     <description>Flight Events XML Parser Application</description>
     
@@ -216,6 +216,6 @@
     
     <scm>
         <developerConnection>scm:git:https://github.com/GrolarDan/flight-events.git</developerConnection>
-        <tag>flight-events-0.0.6</tag>
+        <tag>HEAD</tag>
     </scm>
 </project>
