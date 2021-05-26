@@ -10,7 +10,7 @@
     
     <groupId>cz.masci.flight</groupId>
     <artifactId>flight-events</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.7-SNAPSHOT</version>
     <name>Flight Events App</name>    
     <description>Flight Events XML Parser Application</description>
     
@@ -19,8 +19,8 @@
         <!--Overide lombok version because from 1.18.18 we get an error-->
         <lombok.version>1.18.20</lombok.version>
         
-        <release.version>0.0.5</release.version>
-        <development.version>0.0.6</development.version>
+        <release.version>0.0.7</release.version>
+        <development.version>0.0.8</development.version>
     </properties>
     
     <dependencies>
@@ -126,7 +126,7 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
-<!--            <plugin>
+            <!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
             </plugin>-->
@@ -160,7 +160,7 @@
                                 </goals>
                                 <phase>install</phase>
                             </execution>
-<!--                            <execution>
+                            <execution>
                                 <id>perform</id>
                                 <configuration>
                                     <releaseVersion>${release.version}</releaseVersion>
@@ -169,8 +169,8 @@
                                 <goals>
                                     <goal>perform</goal>
                                 </goals>
-                                <phase>install</phase>
-                            </execution>-->
+                                <phase>deploy</phase>
+                            </execution>
                         </executions>
                     </plugin>
                     <plugin>
@@ -218,4 +218,13 @@
         <developerConnection>scm:git:https://github.com/GrolarDan/flight-events.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
+    
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub</name>
+            <url>https://maven.pkg.github.com/GrolarDan/flight-events</url>  
+        </repository>
+    </distributionManagement>
+
 </project>
