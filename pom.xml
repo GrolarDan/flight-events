@@ -19,8 +19,8 @@
         <!--Overide lombok version because from 1.18.18 we get an error-->
         <lombok.version>1.18.20</lombok.version>
         
-        <release.version>0.0.3</release.version>
-        <development.version>0.0.4</development.version>
+        <release.version>0.0.2</release.version>
+        <development.version>0.0.3</development.version>
     </properties>
     
     <dependencies>
